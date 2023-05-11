@@ -1,0 +1,13 @@
+{
+  "name": "ethersjs-start",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "leejss",
+  "license": "MIT",
+  "type": "module",
+  "dependencies": {
+    "ethers": "^6.3.0",
+    "hardhat": "^2.14.0",
+    "solc": "^0.8.20"
+  }
+}
