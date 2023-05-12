@@ -5,6 +5,9 @@
   "author": "leejss",
   "license": "MIT",
   "type": "module",
+  "scripts": {
+    "deploy": "node scripts/deploy.js"
+  },
   "dependencies": {
     "ethers": "^6.3.0",
     "hardhat": "^2.14.0",

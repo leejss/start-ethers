@@ -1,37 +1,22 @@
-import solc from "solc";
-import fs from "fs";
-import * as ethers from "ethers";
+import { Wallet, ContractFactory, JsonRpcProvider } from "ethers";
+import compileContract from "../utils/compileContract.js";
 
-const input = {
-  language: "Solidity",
-  sources: {
-    "Counter.sol": {
-      content: fs.readFileSync("./contracts/Counter.sol", "utf8"),
-    },
-  },
-  settings: {
-    outputSelection: {
-      "*": {
-        "*": ["*"],
-      },
-    },
-  },
-};
+const HARDHAT_NETWORK = "http://localhost:8545";
 
-const output = JSON.parse(solc.compile(JSON.stringify(input)));
-const contractByteCode = output.contracts["Counter.sol"]["Counter"]["evm"].bytecode.object;
-const contractABI = output.contracts["Counter.sol"]["Counter"].abi;
+// Connect local network
+const provider = new JsonRpcProvider(HARDHAT_NETWORK);
 
-// Create private key
-const privateKey = ethers.randomBytes(32);
-console.log({ privateKey });
-const privateToHex = ethers.hexlify(privateKey);
-console.log({ privateToHex });
+// Compile contract
+const { abi, bytecode } = compileContract("Counter");
 
 // Create wallet instance
-const wallet = new ethers.Wallet(privateToHex);
+// This key is from hardhat test node - Different from local network
+const wallet = new Wallet("0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80", provider);
 
 // Create contract factory
-const contractFactory = new ethers.ContractFactory(contractABI, contractByteCode, wallet);
+const contractFactory = new ContractFactory(abi, bytecode, wallet);
+
+// Deploy contract
 const contract = await contractFactory.deploy();
-await contract.deployed();
+
+console.log(contract);
